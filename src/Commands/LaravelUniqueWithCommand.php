@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace Reinbier\LaravelUniqueWith\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class LaravelUniqueWithCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'laravel-unique-with';
 
     public $description = 'My command';
 
