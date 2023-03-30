@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Reinbier\LaravelUniqueWith\Tests\TestCase;
 
-uses(TestCase::class)->in(__DIR__);
+uses(TestCase::class, LazilyRefreshDatabase::class)->in(__DIR__);
