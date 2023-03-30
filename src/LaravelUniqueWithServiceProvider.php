@@ -2,6 +2,7 @@
 
 namespace Reinbier\LaravelUniqueWith;
 
+use Illuminate\Support\Facades\Validator;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
