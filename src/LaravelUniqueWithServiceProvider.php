@@ -2,9 +2,9 @@
 
 namespace Reinbier\LaravelUniqueWith;
 
+use Reinbier\LaravelUniqueWith\Commands\LaravelUniqueWithCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Reinbier\LaravelUniqueWith\Commands\LaravelUniqueWithCommand;
 
 class LaravelUniqueWithServiceProvider extends PackageServiceProvider
 {
