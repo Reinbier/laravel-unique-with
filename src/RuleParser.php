@@ -31,7 +31,7 @@ class RuleParser
 
     protected $parsed = false;
 
-    public function __construct($attribute = null, $value = null, array $parameters = [], array $data = [])
+    public function __construct(string $attribute = null, string $value = null, array $parameters = [], array $data = [])
     {
         $this->primaryField = $this->attribute = $attribute;
         $this->primaryValue = $value;

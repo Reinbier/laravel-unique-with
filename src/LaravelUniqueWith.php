@@ -4,6 +4,7 @@ namespace Reinbier\LaravelUniqueWith;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Validator;
 
 class LaravelUniqueWith
 {
@@ -30,14 +31,21 @@ class LaravelUniqueWith
         ) == 0;
     }
 
-    public function replaceUniqueWith($message, $attribute, $rule, $parameters, $translator): array|string
+    public function replaceUniqueWith(string $message, string $attribute, string $rule, array $parameters, Validator $validator): array|string
     {
         $ruleParser = new RuleParser($attribute, null, $parameters);
         $fields = $ruleParser->getDataFields();
 
-        $customAttributes = $translator->get('validation.attributes');
+        // merge localized attributes with those explicitly passed to the validator
+        $translator = $validator->getTranslator();
+        $attributes = $translator->get('validation.attributes');
+        // if the key above is not found in the translation file, then return an empty array
+        if (! is_array($attributes)) {
+            $attributes = [];
+        }
+        $customAttributes = array_merge($attributes, $validator->customAttributes);
 
-        // Check if translator has custom validation attributes for the fields
+        // Check if there are custom validation attributes for the fields
         $fields = array_map(function ($field) use ($customAttributes) {
             return Arr::get($customAttributes, $field) ?: str_replace('_', ' ', Str::snake($field));
         }, $fields);

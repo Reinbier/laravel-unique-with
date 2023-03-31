@@ -12,11 +12,6 @@ beforeEach(function () {
     ]);
 });
 
-function validateData(array $rules = [], array $data = []): Illuminate\Validation\Validator
-{
-    return Validator::make($data, $rules);
-}
-
 it('passes validation if there are no existing database rows', function () {
     User::truncate();
 
@@ -26,7 +21,7 @@ it('passes validation if there are no existing database rows', function () {
             'first_name' => 'Alexander',
             'last_name' => 'Bell',
         ]
-    )->passes())->toBeTrue();
+    ))->passes()->toBeTrue();
 });
 
 it('fails validation if there are existing database rows', function () {
@@ -36,7 +31,7 @@ it('fails validation if there are existing database rows', function () {
             'first_name' => 'Alexander',
             'last_name' => 'Bell',
         ]
-    )->passes())->toBeFalse();
+    ))->passes()->toBeFalse();
 });
 
 it('reads parameters without explicit column names', function () {
@@ -47,7 +42,7 @@ it('reads parameters without explicit column names', function () {
             'middle_name' => 'Bar',
             'last_name' => 'Baz',
         ]
-    )->passes())->toBeTrue();
+    ))->passes()->toBeTrue();
 });
 
 it('reads parameters with explicit column names', function () {
@@ -58,7 +53,7 @@ it('reads parameters with explicit column names', function () {
             'tussenvoegsel' => 'Graham',
             'achternaam' => 'Bell',
         ]
-    )->passes())->toBeFalse();
+    ))->passes()->toBeFalse();
 });
 
 it('reads implicit integer ignore id with default column name', function () {
@@ -68,7 +63,7 @@ it('reads implicit integer ignore id with default column name', function () {
             'first_name' => 'Alexander',
             'last_name' => 'Bell',
         ]
-    )->passes())->toBeTrue();
+    ))->passes()->toBeTrue();
 });
 
 it('reads implicit integer ignore id with custom column name', function () {
@@ -83,14 +78,14 @@ it('reads implicit integer ignore id with custom column name', function () {
             'name' => 'Poodle',
             'owner' => 'A. Bell',
         ]
-    )->passes())->toBeFalse()
+    ))->passes()->toBeFalse()
         ->and(validateData(
             ['name' => 'unique_with:dogs,owner,1 = tag'],
             [
                 'name' => 'Poodle',
                 'owner' => 'A. Bell',
             ]
-        )->passes())->ToBeTrue();
+        ))->passes()->ToBeTrue();
 });
 
 it('reads explicit ignore id with default column name', function () {
@@ -99,7 +94,7 @@ it('reads explicit ignore id with default column name', function () {
         [
             'first_name' => 'Alexander',
             'last_name' => 'Bell',
-        ])->passes())->toBeTrue();
+        ]))->passes()->toBeTrue();
 });
 
 it('reads explicit ignore id with custom column name', function () {
@@ -114,7 +109,7 @@ it('reads explicit ignore id with custom column name', function () {
             'name' => 'Poodle',
             'owner' => 'A. Bell',
         ]
-    )->passes())->ToBeTrue();
+    ))->passes()->ToBeTrue();
 });
 
 it('reads explicit ignore non-numeric id with default column name', function () {
@@ -130,145 +125,64 @@ it('reads explicit ignore non-numeric id with default column name', function () 
             'location' => 'Canada',
             'name' => 'Pine',
             'color' => 'Green',
-        ])->passes())->toBeTrue();
+        ]))->passes()->toBeTrue();
 });
 
-//it('replaces_fields_in_error_message_correctly', function () {
-//    $validator = validateData(
-//        ['first_name' => 'unique_with:users,last_name'],
-//        [
-//            'first_name' => 'Alexander',
-//            'last_name' => 'Bell',
-//        ]
-//    );
-//
-//    $expectedErrorMessage = str_replace(':fields', 'first name, last name', 'This combination of :fields already exists.');
-//    expect($validator->getMessageBag()->toArray())->toBe(['first_name' => [$expectedErrorMessage]]);
-//});
+it('replaces_fields_in_error_message_correctly', function () {
+    $validator = validateData(
+        ['first_name' => 'unique_with:users,last_name'],
+        [
+            'first_name' => 'Alexander',
+            'last_name' => 'Bell',
+        ]
+    );
 
-//function it_uses_custom_error_message_coming_from_translator()
-//{
-//    $customErrorMessage = 'Error: Found combination of :fields in database.';
-//
-//    $this->presenceVerifier->getCount(Argument::cetera())->willReturn(1);
-//    $this->trans('uniquewith-validator::validation.unique_with')->shouldBeCalled()
-//        ->willReturn($customErrorMessage);
-//    $this->trans('validation.attributes')->shouldBeCalled()->willReturn([]);
-//
-//    $this->validateData(
-//        ['first_name' => 'unique_with:users,first_name,middle_name,last_name'],
-//        [
-//            'first_name' => 'Foo',
-//            'middle_name' => 'Bar',
-//            'last_name' => 'Baz',
-//        ]
-//    );
-//
-//    $expectedErrorMessage = str_replace(':fields', 'first name, middle name, last name', $customErrorMessage);
-//    expect($this->validator->getMessageBag()->toArray())->toBe(['first_name' => [$expectedErrorMessage]]);
-//}
-//
-//function it_uses_custom_attribute_names_coming_from_translator()
-//{
-//    $this->presenceVerifier->getCount(Argument::cetera())->willReturn(1);
-//
-//    $this->trans('validation.attributes')->shouldBeCalled()->willReturn([
-//        'first_name' => 'Vorname',
-//        'last_name' => 'Nachname',
-//    ]);
-//
-//    $this->validateData(
-//        ['first_name' => 'unique_with:users,first_name,last_name'],
-//        [
-//            'first_name' => 'Foo',
-//            'last_name' => 'Bar',
-//        ]
-//    );
-//
-//    $expectedErrorMessage = str_replace(':fields', 'Vorname, Nachname', $this->getValidationMessage());
-//    expect($this->validator->getMessageBag()->toArray())->toBe(['first_name' => [$expectedErrorMessage]]);
-//}
-//
-//function it_supports_dot_notation_for_an_object_in_rules()
-//{
-//    $this->validateData(
-//        ['name.first' => 'unique_with:users, name.first = first_name, name.last = last_name'],
-//        [
-//            'name' => [
-//                'first' => 'Foo',
-//                'last' => 'Bar',
-//            ],
-//        ]
-//    );
-//
-//    $this->presenceVerifier->getCount(
-//        'users',
-//        'first_name',
-//        'Foo',
-//        null,
-//        null,
-//        ['last_name' => 'Bar']
-//    )->shouldHaveBeenCalled();
-//}
-//
-//function it_supports_dot_notation_for_an_array_in_rules()
-//{
-//    $this->validateData(
-//        ['users.*.first' => 'unique_with:users, users.*.first = first_name, users.*.last = last_name'],
-//        [
-//            'users' => [
-//                [
-//                    'first' => 'Foo',
-//                    'last' => 'Bar',
-//                ],
-//                [
-//                    'first' => 'Baz',
-//                    'last' => 'Quux',
-//                ],
-//            ],
-//        ]
-//    );
-//
-//    $this->presenceVerifier->getCount(
-//        'users',
-//        'first_name',
-//        'Foo',
-//        null,
-//        null,
-//        ['last_name' => 'Bar']
-//    )->shouldHaveBeenCalled();
-//
-//    $this->presenceVerifier->getCount(
-//        'users',
-//        'first_name',
-//        'Baz',
-//        null,
-//        null,
-//        ['last_name' => 'Quux']
-//    )->shouldHaveBeenCalled();
-//}
-//
-//function it_uses_connection_if_specified(DatabasePresenceVerifier $dbVerifier)
-//{
-//    $this->presenceVerifier = $dbVerifier;
-//
-//    $this->validateData(
-//        ['first_name' => 'unique_with:db.users,middle_name,last_name'],
-//        [
-//            'first_name' => 'Foo',
-//            'middle_name' => 'Bar',
-//            'last_name' => 'Baz',
-//        ]
-//    );
-//
-//    $this->presenceVerifier->setConnection('db')->shouldHaveBeenCalled();
-//    $this->presenceVerifier->getCount(
-//        'users',
-//        'first_name',
-//        'Foo',
-//        null,
-//        null,
-//        ['middle_name' => 'Bar', 'last_name' => 'Baz']
-//    )->shouldHaveBeenCalled();
-//}
-//
+    $expectedErrorMessage = str_replace(':fields', 'first name, last name', getValidationMessage());
+    expect($validator->getMessageBag()->toArray())->toBe(['first_name' => [$expectedErrorMessage]]);
+});
+
+it('uses custom attribute names coming from validator', function () {
+    $validator = validateData(
+        ['first_name' => 'unique_with:users,last_name'],
+        [
+            'first_name' => 'Alexander',
+            'last_name' => 'Bell',
+        ], [
+            'first_name' => 'Voornaam',
+            'last_name' => 'Achternaam',
+        ]
+    );
+
+    $expectedErrorMessage = str_replace(':fields', 'Voornaam, Achternaam', getValidationMessage());
+    expect($validator->getMessageBag()->toArray())->toBe(['first_name' => [$expectedErrorMessage]]);
+});
+
+it('supports_dot_notation_for_an_object_in_rules', function () {
+    expect(validateData(
+        ['name.first' => 'unique_with:users, name.first = first_name, name.last = last_name'],
+        [
+            'name' => [
+                'first' => 'Alexander',
+                'last' => 'Bell',
+            ],
+        ]
+    ))->passes()->toBeFalse();
+});
+
+it('supports_dot_notation_for_an_array_in_rules', function () {
+    expect(validateData(
+        ['users.*.first' => 'unique_with:users, users.*.first = first_name, users.*.last = last_name'],
+        [
+            'users' => [
+                [
+                    'first' => 'Foo',
+                    'last' => 'Bar',
+                ],
+                [
+                    'first' => 'Baz',
+                    'last' => 'Quux',
+                ],
+            ],
+        ]
+    ))->getMessageBag()->toBeEmpty();
+});
