@@ -16,6 +16,14 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::connection('other-connection')->create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('first_name');
+            $table->string('middle_name')->nullable();
+            $table->string('last_name');
+            $table->timestamps();
+        });
+
         Schema::create('dogs', function (Blueprint $table) {
             $table->id('tag');
             $table->string('name');

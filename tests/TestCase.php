@@ -29,6 +29,12 @@ class TestCase extends Orchestra
             'prefix' => '',
         ]);
 
+        config()->set('database.connections.other-connection', [
+            'driver' => 'sqlite',
+            'database' => ':memory:',
+            'prefix' => '',
+        ]);
+
         $migration = include __DIR__.'/migrations/create_laravel-unique-with_tables.php.stub';
         $migration->up();
     }

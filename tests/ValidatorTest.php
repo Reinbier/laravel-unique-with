@@ -13,8 +13,7 @@ beforeEach(function () {
     ]);
 });
 
-it('is initializable', function ()
-{
+it('is initializable', function () {
     expect(new LaravelUniqueWith())->toBeObject();
 });
 
@@ -191,4 +190,21 @@ it('supports dot notation for an array in rules', function () {
             ],
         ]
     ))->getMessageBag()->toBeEmpty();
+});
+
+it('uses connection if specified', function () {
+    $data = [
+        'first_name' => 'Alexander',
+        'middle_name' => 'Graham',
+        'last_name' => 'Bell',
+    ];
+
+    expect(validateData(
+        ['first_name' => 'unique_with:users,middle_name,last_name'],
+        $data
+    ))->passes()->toBeFalse()
+        ->and(validateData(
+            ['first_name' => 'unique_with:other-connection.users,middle_name,last_name'],
+            $data
+        ))->passes()->toBeTrue();
 });
