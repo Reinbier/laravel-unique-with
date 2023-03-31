@@ -19,6 +19,7 @@ function getValidationMessage(): string
     return __('unique-with::validation.unique_with');
 }
 
-function getRuleParser(string $attribute = null, string $value = null, array $parameters = [], array $data = []) {
+function getRuleParser(string $attribute = null, string $value = null, array $parameters = [], array $data = [])
+{
     return new RuleParser($attribute, $value, $parameters, $data);
 }

@@ -13,8 +13,7 @@ beforeEach(function () {
     ]);
 });
 
-it('is initializable', function ()
-{
+it('is initializable', function () {
     expect(new LaravelUniqueWith())->toBeObject();
 });
 

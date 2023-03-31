@@ -214,7 +214,6 @@ class RuleParser
     /**
      * Checks whether there was an 'ignore `id`' specified
      *
-     * @param $parameter
      * @return bool|int
      */
     protected function isIgnore($parameter)
@@ -234,7 +233,6 @@ class RuleParser
     /**
      * Figures out the (current) field name undergoing validation
      *
-     * @param $field
      * @return array|mixed|string|string[]
      */
     protected function parseFieldName($field)

@@ -31,10 +31,10 @@ it('can parse one additional field correctly', function () {
 
 it('can parse two additional fields correctly', function () {
     expect(getRuleParser(
-            'first_name',
-            'Foo',
-            ['users', 'middle_name', 'last_name'],
-            ['middle_name' => 'Quux', 'last_name' => 'Bar'])
+        'first_name',
+        'Foo',
+        ['users', 'middle_name', 'last_name'],
+        ['middle_name' => 'Quux', 'last_name' => 'Bar'])
     )
         ->getAdditionalFields()
         ->toBeArray()
@@ -44,10 +44,10 @@ it('can parse two additional fields correctly', function () {
 
 it('can parse custom name for primary field correctly', function () {
     expect(getRuleParser(
-            'first_name',
-            'Foo',
-            ['users', 'first_name = firstName', 'last_name'],
-            ['last_name' => 'Bar'])
+        'first_name',
+        'Foo',
+        ['users', 'first_name = firstName', 'last_name'],
+        ['last_name' => 'Bar'])
     )
         ->getPrimaryField()
         ->toBe('firstName');
@@ -55,10 +55,10 @@ it('can parse custom name for primary field correctly', function () {
 
 it('can parse custom name for additional field correctly', function () {
     expect(getRuleParser(
-            'first_name',
-            'Foo',
-            ['users', 'last_name = sur_name'],
-            ['last_name' => 'Bar'])
+        'first_name',
+        'Foo',
+        ['users', 'last_name = sur_name'],
+        ['last_name' => 'Bar'])
     )
         ->getAdditionalFields()
         ->toHaveKey('sur_name', 'Bar');
@@ -102,16 +102,16 @@ it('can parse explicit ignore column correctly', function () {
 
 it('can parse dot notation for object correctly', function () {
     expect(getRuleParser(
-            'name.first',
-            'Foo',
-            ['users', 'name.first = first_name', 'name.last = last_name'],
-            [
-                'name' => [
-                    'first' => 'Foo',
-                    'last' => 'Bar',
-                ],
-            ]
-        )
+        'name.first',
+        'Foo',
+        ['users', 'name.first = first_name', 'name.last = last_name'],
+        [
+            'name' => [
+                'first' => 'Foo',
+                'last' => 'Bar',
+            ],
+        ]
+    )
     )
         ->getPrimaryField()->toBe('first_name')
         ->getAdditionalFields()->toHaveKey('last_name', 'Bar');
@@ -119,22 +119,22 @@ it('can parse dot notation for object correctly', function () {
 
 it('can parse dot notation for first entry of array correctly', function () {
     expect(getRuleParser(
-            'users.0.first',
-            'Foo',
-            ['users', 'users.*.first = first_name', 'users.*.last = last_name'],
-            [
-                'users' => [
-                    [
-                        'first' => 'Foo',
-                        'last' => 'Bar',
-                    ],
-                    [
-                        'first' => 'Baz',
-                        'last' => 'Quux',
-                    ],
+        'users.0.first',
+        'Foo',
+        ['users', 'users.*.first = first_name', 'users.*.last = last_name'],
+        [
+            'users' => [
+                [
+                    'first' => 'Foo',
+                    'last' => 'Bar',
                 ],
-            ]
-        )
+                [
+                    'first' => 'Baz',
+                    'last' => 'Quux',
+                ],
+            ],
+        ]
+    )
     )
         ->getPrimaryField()->toBe('first_name')
         ->getAdditionalFields()->toHaveKey('last_name', 'Bar');
