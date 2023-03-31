@@ -22,7 +22,7 @@ class LaravelUniqueWithServiceProvider extends PackageServiceProvider
 
     public function packageBooted()
     {
-        $message = app('translator')->get('laravel-unique-with::validation.unique_with');
+        $message = app('translator')->get('unique-with::validation.unique_with');
 
         Validator::extend('unique_with', LaravelUniqueWith::class.'@validateUniqueWith', $message);
         Validator::replacer('unique_with', function () {
