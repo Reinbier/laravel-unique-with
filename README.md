@@ -5,15 +5,10 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/reinbier/laravel-unique-with/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/reinbier/laravel-unique-with/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/reinbier/laravel-unique-with.svg?style=flat-square)](https://packagist.org/packages/reinbier/laravel-unique-with)
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+This package contains a variant of the validateUnique rule for Laravel, that allows for validation of multi-column UNIQUE indexes.
 
-## Support us
-
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/laravel-unique-with.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/laravel-unique-with)
-
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
+#### Please note
+_This package is to continue development of the package [uniquewith-validator](https://github.com/felixkiss/uniquewith-validator) by [Felix Kiss](https://github.com/felixkiss) and have it work with recent versions of the Laravel framework (continuing from Laravel 9 onwards). For older versions of the framework, please use the aforementioned package._
 
 ## Installation
 
@@ -23,37 +18,169 @@ You can install the package via composer:
 composer require reinbier/laravel-unique-with
 ```
 
-You can publish and run the migrations with:
+## Usage
 
-```bash
-php artisan vendor:publish --tag="laravel-unique-with-migrations"
-php artisan migrate
-```
-
-You can publish the config file with:
-
-```bash
-php artisan vendor:publish --tag="laravel-unique-with-config"
-```
-
-This is the contents of the published config file:
+Use it like any `Validator` rule:
 
 ```php
-return [
+$rules = [
+    '<field1>' => 'unique_with:<table>,<field2>[,<field3>,...,<ignore_rowid>]',
 ];
 ```
 
-Optionally, you can publish the views using
+See the [Validation documentation](http://laravel.com/docs/validation) of Laravel.
 
-```bash
-php artisan vendor:publish --tag="laravel-unique-with-views"
+### Specify different column names in the database
+
+If your input field names are different from the corresponding database columns,
+you can specify the column names explicitly.
+
+e.g. your input contains a field 'last_name', but the column in your database is called 'sur_name':
+```php
+$rules = [
+    'first_name' => 'unique_with:users, middle_name, last_name = sur_name',
+];
 ```
 
-## Usage
+### Ignore existing row (useful when updating)
+
+You can also specify a row id to ignore (useful to solve unique constraint when updating)
+
+This will ignore row with id 2
 
 ```php
-$laravelUniqueWith = new Reinbier\LaravelUniqueWith();
-echo $laravelUniqueWith->echoPhrase('Hello, Reinbier!');
+$rules = [
+    'first_name' => 'required|unique_with:users,last_name,2',
+    'last_name' => 'required',
+];
+```
+
+To specify a custom column name for the id, pass it like
+
+```php
+$rules = [
+    'first_name' => 'required|unique_with:users,last_name,2 = custom_id_column',
+    'last_name' => 'required',
+];
+```
+
+If your id is not numeric, you can tell the validator
+
+```php
+$rules = [
+    'first_name' => 'required|unique_with:users,last_name,ignore:abc123',
+    'last_name' => 'required',
+];
+```
+
+### Add additional clauses (e.g. when using soft deletes)
+
+You can also set additional clauses. For example, if your model uses soft deleting
+then you can use the following code to select all existing rows but marked as deleted
+
+```php
+$rules = [
+    'first_name' => 'required|unique_with:users,last_name,deleted_at,2 = custom_id_column',
+    'last_name' => 'required',
+];
+```
+
+*Soft delete caveat:*
+
+If the validation is performed in a form request class, field deleted_at is skipped, because it's not send in request. 
+To solve this problem, add 'deleted_at' => null to your validation parameters in request class., e.g.:
+
+```php
+protected function validationData()
+{
+    return array_merge($this->request->all(), [
+        'deleted_at' => null
+    ]);
+}
+```
+
+### Specify specific database connection to use
+
+If we have a connection named `some-database`, we can enforce this connection (rather than the default) like this:
+
+```php
+$rules = [
+    'first_name' => 'unique_with:some-database.users, middle_name, last_name',
+];
+```
+
+## Example
+
+Pretend you have a `users` table in your database plus `User` model like this:
+
+```php
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+
+return new class extends Migration {
+
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('users', function(Blueprint $table) {
+            $table->increments('id');
+
+            $table->timestamps();
+
+            $table->string('first_name');
+            $table->string('last_name');
+
+            $table->unique(['first_name', 'last_name']);
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('users');
+    }
+
+}
+```
+
+```php
+<?php
+
+class User extends Model { }
+```
+
+Now you can validate a given `first_name`, `last_name` combination with something like this:
+
+```php
+Route::post('test', function() {
+    $rules = [
+        'first_name' => 'required|unique_with:users,last_name',
+        'last_name' => 'required',
+    ];
+
+    $validator = Validator::make(Input::all(), $rules);
+
+    if($validator->fails()) {
+        return Redirect::back()->withErrors($validator);
+    }
+
+    $user = new User;
+    $user->first_name = Input::get('first_name');
+    $user->last_name = Input::get('last_name');
+    $user->save();
+
+    return Redirect::home()->with('success', 'User created!');
+});
 ```
 
 ## Testing
@@ -78,6 +205,8 @@ Please review [our security policy](../../security/policy) on how to report secu
 
 - [reinbier](https://github.com/Reinbier)
 - [All Contributors](../../contributors)
+
+The code from this package is based on the original code that came from [uniquewith-validator](https://github.com/felixkiss/uniquewith-validator) by [Felix Kiss](https://github.com/felixkiss).
 
 ## License
 

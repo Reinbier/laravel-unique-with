@@ -2,7 +2,7 @@ The MIT License (MIT)
 
 Copyright (c) Reinbier <support@reinbier.nl> 
 
-Copyright © 2014 Felix Kiss
+Copyright © 2014 Felix Kiss <https://github.com/felixkiss>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
