@@ -1,5 +1,6 @@
 <?php
 
+use Reinbier\LaravelUniqueWith\LaravelUniqueWith;
 use Reinbier\LaravelUniqueWith\Tests\models\Dog;
 use Reinbier\LaravelUniqueWith\Tests\models\Tree;
 use Reinbier\LaravelUniqueWith\Tests\models\User;
@@ -10,6 +11,11 @@ beforeEach(function () {
         'middle_name' => 'Graham',
         'last_name' => 'Bell',
     ]);
+});
+
+it('is initializable', function ()
+{
+    expect(new LaravelUniqueWith())->toBeObject();
 });
 
 it('passes validation if there are no existing database rows', function () {
@@ -128,7 +134,7 @@ it('reads explicit ignore non-numeric id with default column name', function () 
         ]))->passes()->toBeTrue();
 });
 
-it('replaces_fields_in_error_message_correctly', function () {
+it('replaces fields in error message correctly', function () {
     $validator = validateData(
         ['first_name' => 'unique_with:users,last_name'],
         [
@@ -157,7 +163,7 @@ it('uses custom attribute names coming from validator', function () {
     expect($validator->getMessageBag()->toArray())->toBe(['first_name' => [$expectedErrorMessage]]);
 });
 
-it('supports_dot_notation_for_an_object_in_rules', function () {
+it('supports dot notation for an object in rules', function () {
     expect(validateData(
         ['name.first' => 'unique_with:users, name.first = first_name, name.last = last_name'],
         [
@@ -169,7 +175,7 @@ it('supports_dot_notation_for_an_object_in_rules', function () {
     ))->passes()->toBeFalse();
 });
 
-it('supports_dot_notation_for_an_array_in_rules', function () {
+it('supports dot notation for an array in rules', function () {
     expect(validateData(
         ['users.*.first' => 'unique_with:users, users.*.first = first_name, users.*.last = last_name'],
         [

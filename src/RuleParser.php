@@ -105,6 +105,11 @@ class RuleParser
         return $this->connection;
     }
 
+    /**
+     * The table to undergo validation
+     *
+     * @return mixed
+     */
     public function getTable()
     {
         $this->parse();
@@ -112,6 +117,11 @@ class RuleParser
         return $this->table;
     }
 
+    /**
+     * The field under validation
+     *
+     * @return string|null
+     */
     public function getPrimaryField()
     {
         $this->parse();
@@ -119,6 +129,11 @@ class RuleParser
         return $this->primaryField;
     }
 
+    /**
+     * The value of the field under validation
+     *
+     * @return string|null
+     */
     public function getPrimaryValue()
     {
         $this->parse();
@@ -126,6 +141,11 @@ class RuleParser
         return $this->primaryValue;
     }
 
+    /**
+     * The other fields to validate the primary field with
+     *
+     * @return mixed
+     */
     public function getAdditionalFields()
     {
         $this->parse();
@@ -133,6 +153,11 @@ class RuleParser
         return $this->additionalFields;
     }
 
+    /**
+     * The value of the id to be ignored
+     *
+     * @return mixed
+     */
     public function getIgnoreValue()
     {
         $this->parse();
@@ -140,6 +165,11 @@ class RuleParser
         return $this->ignoreValue;
     }
 
+    /**
+     * The name of the column holding the value that should be ignored
+     *
+     * @return mixed
+     */
     public function getIgnoreColumn()
     {
         $this->parse();
@@ -147,6 +177,11 @@ class RuleParser
         return $this->ignoreColumn;
     }
 
+    /**
+     * All fields combined
+     *
+     * @return mixed
+     */
     public function getDataFields()
     {
         $this->parse();
@@ -154,6 +189,11 @@ class RuleParser
         return $this->dataFields;
     }
 
+    /**
+     * Checks whether a value is to be ignored
+     *
+     * @return void
+     */
     protected function parseIgnore()
     {
         // Ignore has to be specified as the last parameter
@@ -171,6 +211,12 @@ class RuleParser
         array_pop($this->parameters);
     }
 
+    /**
+     * Checks whether there was an 'ignore `id`' specified
+     *
+     * @param $parameter
+     * @return bool|int
+     */
     protected function isIgnore($parameter)
     {
         // An ignore_id can be specified by prefixing with 'ignore:'
@@ -179,12 +225,18 @@ class RuleParser
         }
 
         // An ignore_id can be specified if parameter starts with a
-        // number greater than 1 (a valid id in the database)
+        // number greater than or equal to 1 (a valid id in the database)
         $parts = array_map('trim', explode('=', $parameter));
 
         return preg_match('/^[1-9][0-9]*$/', $parts[0]);
     }
 
+    /**
+     * Figures out the (current) field name undergoing validation
+     *
+     * @param $field
+     * @return array|mixed|string|string[]
+     */
     protected function parseFieldName($field)
     {
         if (preg_match('/^\*\.|\.\*\./', $field)) {

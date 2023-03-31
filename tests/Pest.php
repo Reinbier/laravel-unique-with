@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Reinbier\LaravelUniqueWith\RuleParser;
 use Reinbier\LaravelUniqueWith\Tests\TestCase;
 
 uses(TestCase::class, LazilyRefreshDatabase::class)->in(__DIR__);
@@ -16,4 +17,8 @@ function validateData(
 function getValidationMessage(): string
 {
     return __('unique-with::validation.unique_with');
+}
+
+function getRuleParser(string $attribute = null, string $value = null, array $parameters = [], array $data = []) {
+    return new RuleParser($attribute, $value, $parameters, $data);
 }
