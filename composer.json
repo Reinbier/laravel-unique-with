@@ -61,10 +61,7 @@
         "laravel": {
             "providers": [
                 "Reinbier\\LaravelUniqueWith\\LaravelUniqueWithServiceProvider"
-            ],
-            "aliases": {
-                "LaravelUniqueWith": "Reinbier\\LaravelUniqueWith\\Facades\\LaravelUniqueWith"
-            }
+            ]
         }
     },
     "minimum-stability": "dev",
