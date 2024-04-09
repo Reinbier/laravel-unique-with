@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-unique-with` will be documented in this file.
 
+## v1.1.0 - 2024-04-09
+
+### What's Changed
+
+* Support Laravel 11
+
+**Full Changelog**: https://github.com/Reinbier/laravel-unique-with/compare/v1.0.0...v1.1.0
+
 ## v1.0.0 - 2023-03-31
 
 ### Initial release
