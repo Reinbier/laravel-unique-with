@@ -20,8 +20,8 @@ function getValidationMessage(): string
 }
 
 function getRuleParser(
-    string $attribute = null,
-    string $value = null,
+    ?string $attribute = null,
+    ?string $value = null,
     array $parameters = [],
     array $data = []
 ): RuleParser {
