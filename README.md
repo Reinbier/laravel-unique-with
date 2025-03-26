@@ -10,6 +10,14 @@ This package contains a variant of the validateUnique rule for Laravel, that all
 #### Please note
 _This package is to continue development of the package [uniquewith-validator](https://github.com/felixkiss/uniquewith-validator) by [Felix Kiss](https://github.com/felixkiss) and have it work with recent versions of the Laravel framework (continuing from Laravel 9 onwards). For older versions of the framework, please use the aforementioned package._
 
+### Versioning
+For the sake of maintainability and testability, this package uses different major versions to support Laravel, make sure to pick the right one based on the table below.
+
+| Laravel version | Package version |
+|-----------------|-----------------|
+| v9 & 10         | v1.x            |
+| v11 & 12        | v2.x            |
+
 ## Installation
 
 You can install the package via composer:
