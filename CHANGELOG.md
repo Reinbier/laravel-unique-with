@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-unique-with` will be documented in this file.
 
+## v2.1.0 - 2026-05-27
+
+### What's Changed
+
+* Support Laravel v13
+
+**Full Changelog**: https://github.com/Reinbier/laravel-unique-with/compare/v2.0.0...v2.1.0
+
 ## v2.0.0 - 2025-03-26
 
 ### What's Changed
